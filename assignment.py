@@ -106,10 +106,13 @@ for line in fileHandle:
 sum=0
 #Print results
 print("Results:")
-for element in extensions:
+if len(extensions) > 0:
+	for element in extensions:
 
-	print(element+": "+str(len(extensions[element])))
-	sum+= len(extensions[element])
+		print(element+": "+str(len(extensions[element])))
+		sum+= len(extensions[element])
+else:
+	print("No valid lines found in file")
 
 print("total: "+str(sum))
 		
