@@ -30,11 +30,31 @@ for line in fileHandle:
 	#If the JSON data was loaded, make sure each entry name is found in the JSON data
 	if validLine is not False:
 		for eName in entryNames:
+			
 			#If the entry name is not found, the line is not valid, break
 			if eName not in data:		
 				validLine = False
 				print("Missing: "+eName)
 				break
+
+			#Make sure none of the entries have types that are not int nor string. 
+			#This makes sure there are no nested json entries inside of the fields
+			#Ex. {"address": {"street":123, cat:"meow"}}
+			if not isinstance(data[eName],int) and not isinstance(data[eName],str):
+				validLine = False
+				print("Field is not str or int")
+				break
+				
+			#Check that for each entry, the given field is the right type
+			if (eName == "ts" or eName == "pt" or eName == "dp") and not isinstance(data[eName], int):
+				validLine = False
+				print(eName+" has field that is not int")
+				break
+			elif (eName == "si" or eName == "uu" or eName == "bg" or eName == "sha" or eName == "nm" or eName == "ph") and not isinstance(data[eName],str):
+				validLine = False
+				print(eName+" has field that is not str")
+				break
+			
 			#If fName is "dp", check if the dp value is valid
 			if eName == "dp":
 				#Get the dpValue
