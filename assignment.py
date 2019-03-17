@@ -5,23 +5,39 @@ try:
 	fileHandle = open(sys.argv[1], "r")
 except IOError:
 	print ("Could not open file ", sys.argv[1], " for reading.")
+except IndexError:
+	print ("No argument was given for filename. Try again with filename added. \nEx. \"python3 assignment.py log.json\" or \"python3 assignment.py <path to file>\"")
+	sys.exit()
 
 #Create a dictionary for extensions
 extensions = {}
 
 #Create an array with expected substrings per line in the JSON file
-formatNames = ["\"ts\"", ",\"pt\"", ",\"si\"", ",\"uu\"", ",\"bg\"", ",\"sha\"", ",\"nm\"", ",\"ph\"", ",\"dp\""]
+#Commas and quotation marks are included so that the entry names are found as opposed to substrings that may exist in the value fields of entries
+entryNames = ["\"ts\":", ",\"pt\":", ",\"si\":", ",\"uu\":", ",\"bg\":", ",\"sha\":", ",\"nm\":", ",\"ph\":", ",\"dp\":"]
 
 #Parsing though each line:
 for line in fileHandle:
 	#Assume line is valid initially
 	validLine = True
 	#Check if each substring in formatNames is found in the line
-	for fNames in formatNames:
+	for eName in entryNames:
 		#If the substring is not found, the line is not valid, break
-		if fNames not in line:		
+		eNameIndex = line.find(eName)
+		if eNameIndex == -1:		
 			validLine = False
+			print("Missing: "+eName)
 			break
+		#If fName is "dp":
+		if eName == ",\"dp\":":
+			#Get the dpValue
+			dpValue = line[eNameIndex+6:]
+			dpValue = dpValue[0:dpValue.find("}")]
+			print("dpValue: "+dpValue)
+			#If the dpValue is not 1,2, or 3, the line is invalid
+			if int(dpValue) < 1 or int(dpValue) > 3:
+				validLine = False
+				break
 			
 	#If line is not valid, continue to next line in JSON line
 	if validLine == False:
