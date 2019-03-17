@@ -1,4 +1,4 @@
-import sys
+import sys, json
 
 #Open JSON file
 try:
@@ -13,44 +13,48 @@ except IndexError:
 extensions = {}
 
 #Create an array with expected substrings per line in the JSON file
-#Commas and quotation marks are included so that the entry names are found as opposed to substrings that may exist in the value fields of entries
-entryNames = ["\"ts\":", ",\"pt\":", ",\"si\":", ",\"uu\":", ",\"bg\":", ",\"sha\":", ",\"nm\":", ",\"ph\":", ",\"dp\":"]
+entryNames = ["ts", "pt", "si", "uu", "bg", "sha", "nm", "ph", "dp"]
 
 #Parsing though each line:
 for line in fileHandle:
 	#Assume line is valid initially
 	validLine = True
-	#Check if each substring in formatNames is found in the line
-	for eName in entryNames:
-		#If the substring is not found, the line is not valid, break
-		eNameIndex = line.find(eName)
-		if eNameIndex == -1:		
-			validLine = False
-			print("Missing: "+eName)
-			break
-		#If fName is "dp":
-		if eName == ",\"dp\":":
-			#Get the dpValue
-			dpValue = line[eNameIndex+6:]
-			dpValue = dpValue[0:dpValue.find("}")]
-			print("dpValue: "+dpValue)
-			#If the dpValue is not 1,2, or 3, the line is invalid
-			if int(dpValue) < 1 or int(dpValue) > 3:
+	
+	#Load json data
+	#If line is not in JSON format, catch the exception from loading and flag the line as invalid
+	try:
+		data = json.loads(line)
+	except:
+		validLine = False
+
+	#If the JSON data was loaded, make sure each entry name is found in the JSON data
+	if validLine is not False:
+		for eName in entryNames:
+			#If the entry name is not found, the line is not valid, break
+			if eName not in data:		
 				validLine = False
+				print("Missing: "+eName)
 				break
-			
-	#If line is not valid, continue to next line in JSON line
+			#If fName is "dp", check if the dp value is valid
+			if eName == "dp":
+				#Get the dpValue
+				dpValue = data[eName]
+				print("dpValue: "+str(dpValue))
+				
+				#If the dpValue is not 1,2, or 3, the line is invalid
+				if int(dpValue) < 1 or int(dpValue) > 3:
+					validLine = False
+					break
+				
+	#If line is not valid, continue to next line in JSON file
 	if validLine == False:
 		print("invalid line: "+line)
 		continue
 	
-	#Find the index where the file name information is
-	nameIndex = line.find(",\"nm\":")
-	
-	#Create a substring starting from the filename to the end of the line to the second
-	#quotation mark in the "nm" entry
-	fileName = line[nameIndex+7:]
-	fileName = fileName[0:fileName.find("\"")]
+
+	#Retrieve filename from nm field
+	fileName = data["nm"]
+
 	#print (fileName)
 	#Find the first dot found in the filename. This will help account for files with extesions (.tar.gz)
 	dotIndex = fileName.find(".")
@@ -58,19 +62,19 @@ for line in fileHandle:
 	
 	#If no dot is found, this is a file without an extension
 	if (dotIndex == -1):
-		#If there is not a "none" entry in the extensions dictionary
-		if "none" not in extensions:
-			#Make a "none" entry and set it to an empty dictionary
-			extensions["none"] = {}
+		#If there is not a "No extension" entry in the extensions dictionary
+		if "No extension" not in extensions:
+			#Make a "No extension" entry and set it to an empty dictionary
+			extensions["No extension"] = {}
 			#Inside that nested entry, record an entry for the filename
-			extensions["none"][fileName] = 1
+			extensions["No extension"][fileName] = 1
 		else:
-			#If there is an entry for "none" in extensions, see if fileName is found in the "none" dictionary
-			if fileName not in extensions["none"]:
-				#If not found in the "none" dictionary, add the fileName as a new entry
-				extensions["none"][fileName] = 1
+			#If there is an entry for "No extension" in extensions, see if fileName is found in the "No extension" dictionary
+			if fileName not in extensions["No extension"]:
+				#If not found in the "No extension" dictionary, add the fileName as a new entry
+				extensions["No extension"][fileName] = 1
 			else:
-				#fileName entry is found in the "none" dictionary
+				#fileName entry is found in the "No extension" dictionary
 				print("Double found! " + fileName)
 
 	#If a dot is found in the fileName
