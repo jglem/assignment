@@ -1,3 +1,5 @@
+#Name: Justina L.
+#C-I-S-C-O assignment
 import sys, json
 
 #Open JSON file
@@ -12,8 +14,8 @@ except IndexError:
 #Create a dictionary for extensions
 extensions = {}
 
-#Create an array with expected substrings per line in the JSON file
-entryNames = ["ts", "pt", "si", "uu", "bg", "sha", "nm", "ph", "dp"]
+#Create an array with expected field names per line in the JSON file
+fieldNames = ["ts", "pt", "si", "uu", "bg", "sha", "nm", "ph", "dp"]
 
 #Parsing though each line:
 for line in fileHandle:
@@ -27,38 +29,37 @@ for line in fileHandle:
 	except:
 		validLine = False
 
-	#If the JSON data was loaded, make sure each entry name is found in the JSON data
+	#If the JSON data was loaded, make sure each field name is found in the JSON data
 	if validLine is not False:
-		for eName in entryNames:
-			
+		for fName in fieldNames:
 			#If the entry name is not found, the line is not valid, break
-			if eName not in data:		
+			if fName not in data:		
 				validLine = False
-				print("Missing: "+eName)
+				print("Missing: "+fName)
 				break
 
 			#Make sure none of the entries have types that are not int nor string. 
 			#This makes sure there are no nested json entries inside of the fields
 			#Ex. {"address": {"street":123, cat:"meow"}}
-			if not isinstance(data[eName],int) and not isinstance(data[eName],str):
+			if not isinstance(data[fName],int) and not isinstance(data[fName],str):
 				validLine = False
 				print("Field is not str or int")
 				break
 				
 			#Check that for each entry, the given field is the right type
-			if (eName == "ts" or eName == "pt" or eName == "dp") and not isinstance(data[eName], int):
+			if (fName == "ts" or fName == "pt" or fName == "dp") and not isinstance(data[fName], int):
 				validLine = False
-				print(eName+" has field that is not int")
+				print(fName+" has field that is not int")
 				break
-			elif (eName == "si" or eName == "uu" or eName == "bg" or eName == "sha" or eName == "nm" or eName == "ph") and not isinstance(data[eName],str):
+			elif (fName == "si" or fName == "uu" or fName == "bg" or fName == "sha" or fName == "nm" or fName == "ph") and not isinstance(data[fName],str):
 				validLine = False
-				print(eName+" has field that is not str")
+				print(fName+" has field that is not str")
 				break
 			
 			#If fName is "dp", check if the dp value is valid
-			if eName == "dp":
+			if fName == "dp":
 				#Get the dpValue
-				dpValue = data[eName]
+				dpValue = data[fName]
 				print("dpValue: "+str(dpValue))
 				
 				#If the dpValue is not 1,2, or 3, the line is invalid
