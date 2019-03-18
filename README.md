@@ -16,3 +16,5 @@ sha: string
 nm: string
 ph: string
 dp: integer
+
+2. Each entry in the JSON file is on a single line

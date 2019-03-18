@@ -43,7 +43,7 @@ for line in fileHandle:
 			#Ex. {"address": {"street":123, cat:"meow"}}
 			if not isinstance(data[fName],int) and not isinstance(data[fName],str):
 				validLine = False
-				print("Field is not str or int")
+				print("Field is not str or int. It is"+str(type(data[fName])))
 				break
 				
 			#Check that for each entry, the given field is the right type
