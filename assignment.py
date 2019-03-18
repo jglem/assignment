@@ -2,6 +2,16 @@
 #C-I-S-C-O assignment
 import sys, json
 
+pathCheck = True
+
+try:
+	if sys.argv[2] == "pathCheckOff":
+		pathCheck = False
+		print("Path check turned off")
+except:
+	pass
+	
+
 #Open JSON file
 try:
 	fileHandle = open(sys.argv[1], "r")
@@ -55,6 +65,19 @@ for line in fileHandle:
 				validLine = False
 				print(fName+" has field that is not str")
 				break
+			
+			if pathCheck:
+				if fName == "ph":
+					slashIndex = data[fName].rfind("/")
+					pathFileName = ""
+					if slashIndex > -1:
+						pathFileName = data[fName][slashIndex+1:]
+					else:
+						pathFileName = data[fName]
+				
+					if pathFileName != data["nm"]:
+						validLine = False
+						break
 			
 			#If fName is "dp", check if the dp value is valid
 			if fName == "dp":
