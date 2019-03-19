@@ -40,7 +40,6 @@ for line in fileHandle:
 	try:
 		data = json.loads(line)
 	except:
-		print("couldn't load json properly")
 		validLine = False
 		
 	#########Check to see the given JSON data is valid#########
@@ -53,17 +52,14 @@ for line in fileHandle:
 			#1) Check if the field name is found in the loaded JSON data
 			if fName not in data:		
 				validLine = False
-				print("Missing: "+fName)
 				break
 				
 			#2) Check that for each field, the given field is the right type
 			if (fName == "ts" or fName == "pt" or fName == "dp") and not isinstance(data[fName], int):
 				validLine = False
-				print(fName+" has field that is not int")
 				break
 			elif (fName == "si" or fName == "uu" or fName == "bg" or fName == "sha" or fName == "nm" or fName == "ph") and not isinstance(data[fName],str):
 				validLine = False
-				print(fName+" has field that is not str")
 				break
 			
 			#3) If path check is turned on and the current fName is "ph"
@@ -85,26 +81,21 @@ for line in fileHandle:
 					
 					#If the names do not match, the line is not valid
 					if pathFileName != data["nm"]:
-						print("ph and nm don't match")
 						validLine = False
 						break
 			
 			#4) If fName is "dp", check if the dp value is valid,
 			#get the dp value
-			if fName == "dp":
-				
+			if fName == "dp":				
 				dpValue = data[fName]
-				print("dpValue: "+str(dpValue))
 				
 				#If the dpValue is not 1,2, or 3, the line is invalid
 				if int(dpValue) < 1 or int(dpValue) > 3:
 					validLine = False
-					print("dp value invalid")
 					break
 				
 	#If line is not valid, continue to the next line in the JSON file
 	if validLine == False:
-		print("invalid line: "+line)
 		continue
 	
 	#########Record unique filenames into a set of nested dictionaries#########
@@ -130,9 +121,8 @@ for line in fileHandle:
 		#add a new entry in the "No extensions" dictionary for fileName
 		if fileName not in extensions["No extension"]:
 			extensions["No extension"][fileName] = 1
-		#else: fileName entry is found in the "No extension" dictionary
-		else:				
-			print("Double found! " + fileName)
+			
+		#else, do not try to add anything new to the "No extensions" dictionary
 
 	#If a dot is found in the fileName, this is a filename with an extension
 	else:
@@ -151,10 +141,8 @@ for line in fileHandle:
 		#add fileName as a new entry in the nested extName dictionary
 		if fileName not in extensions[extName]:				
 			extensions[extName][fileName]=1
-		#else: fileName entry is found in the nested extName dictionary			
-		else:				
-			print("Double found! " + fileName +"."+extName)
-			continue
+			
+		#else, fileName entry is found in the nested extName dictionary, do nothing			
 
 
 #########Print results and tally number of unique filenames#########
