@@ -2,7 +2,7 @@
 #C-I-S-C-O assignment
 import sys, json
 
-#Initialize pathCheck boolean, which determine if the filename 
+#Initialize pathCheck boolean, which determines if the filename 
 #in the "ph" field is checked with the "nm" field
 pathCheck = True
 
@@ -32,6 +32,7 @@ fieldNames = ["ts", "pt", "si", "uu", "bg", "sha", "nm", "ph", "dp"]
 
 #Parsing though each line:
 for line in fileHandle:
+	
 	#Assume line is valid initially
 	validLine = True
 	
@@ -43,7 +44,7 @@ for line in fileHandle:
 		validLine = False
 		
 	#########Check to see the given JSON data is valid#########
-	#If the JSON data was loaded, make sure each field name is found in the JSON data
+	#If the JSON data was loaded, perform validity checks on the JSON data
 	if validLine is not False:
 		
 		#For each expected field name
@@ -54,7 +55,7 @@ for line in fileHandle:
 				validLine = False
 				break
 				
-			#2) Check that for each field, the given field is the right type
+			#2) Check that for each field, the given field is the right data type
 			if (fName == "ts" or fName == "pt" or fName == "dp") and not isinstance(data[fName], int):
 				validLine = False
 				break
@@ -79,7 +80,7 @@ for line in fileHandle:
 					else:
 						pathFileName = data[fName]
 					
-					#If the names do not match, the line is not valid
+					#If the filenames do not match, the line is not valid
 					if pathFileName != data["nm"]:
 						validLine = False
 						break
@@ -98,26 +99,22 @@ for line in fileHandle:
 	if validLine == False:
 		continue
 	
-	#########Record unique filenames into a set of nested dictionaries#########
-
-	
+	#########Record unique filenames into a set of nested dictionaries#########	
 	#Retrieve filename from nm field
 	fileName = data["nm"]
 
-	#print (fileName)
-	#Find the first dot found in the filename. This will help account for files with extesions (.tar.gz)
+	#Find the first dot found in the filename. This will help account for files with extensions (.tar.gz)
 	dotIndex = fileName.find(".")
-	#print(dotIndex)
 	
 	#If no dot is found, this is a file without an extension
 	if (dotIndex == -1):
+		
 		#If there is not a "No extension" entry in the extensions dictionary,
 		#make a "No extension" entry and set it to an empty dictionary,
-		#and inside that nested dictionary, record an entry for the filename and set it to a value
 		if "No extension" not in extensions:			
 			extensions["No extension"] = {}
 
-		#If fileName is bit found in the "No extension" dictionary,
+		#If fileName is not found in the "No extension" dictionary,
 		#add a new entry in the "No extensions" dictionary for fileName
 		if fileName not in extensions["No extension"]:
 			extensions["No extension"][fileName] = 1
@@ -126,14 +123,13 @@ for line in fileHandle:
 
 	#If a dot is found in the fileName, this is a filename with an extension
 	else:
+		
 		#Separate the extension name from the just the filename
 		extName = fileName[dotIndex+1:]
 		fileName = fileName[0:dotIndex]
-		#print(fileName)
-		#print(extName)
+
 		#If the extName is not an entry in the extensions dictionary,
 		#make an entry for extName and set it to an empty dictionary
-		#and Add the fileName as an entry in the new empty dictionary for extName.
 		if extName not in extensions:			
 			extensions[extName] = {}			
 
@@ -144,14 +140,13 @@ for line in fileHandle:
 			
 		#else, fileName entry is found in the nested extName dictionary, do nothing			
 
-
-#########Print results and tally number of unique filenames#########
+#########Print results alphabetically and tally number of unique filenames#########
 sum=0
 print("Results:")
 if len(extensions) > 0:
-	for element in extensions:
-		print(element+": "+str(len(extensions[element])))
-		sum+= len(extensions[element])
+	for key in sorted(extensions.keys()):
+		print(key+": "+str(len(extensions[key])))
+		sum+= len(extensions[key])
 else:
 	print("No valid lines found in file")
 
