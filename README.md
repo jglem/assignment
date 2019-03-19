@@ -1,7 +1,7 @@
 ## C-i-s-c-o assignment
 
 This is a coding assignment for C-i-s-c-o by Justina L.
-The code is written in python 3.6.7, but python 3.7.1 works as well and possibly other versions of python 3. It takes the JSON file to parse as the first argument after the file name in command line.
+The code is written for python 3.6.7, but python 3.7.1 works as well and possibly other versions of python 3. It takes the JSON file to parse as the first argument after the file name in command line.
 
 Ex. "python3 assignment.py log.json" or "python3 assignment.py <path to file from current directory>"
 
