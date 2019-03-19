@@ -19,6 +19,6 @@ dp: integer
 
 2. Each entry in the JSON file is on a single line, which is the format of the example json file sent in the assignment email.
 3. As observed in the example json file, the filename found in the path field ("ph") should be the same as the name found in the name field ("nm").
----Ex. Both "nm":"ywcgdssxa.qxd","ph":"/dabs/yuqqwzxq/nvwmsndab/veottijas/ywcgdssxa.qxd" and "nm":"dpxjbt.cvs","ph":"dpxjbt.cvs" are valid pairs of json data.--
+   Ex. Both "nm":"ywcgdssxa.qxd","ph":"/dabs/yuqqwzxq/nvwmsndab/veottijas/ywcgdssxa.qxd" and "nm":"dpxjbt.cvs","ph":"dpxjbt.cvs" are valid pairs of json data.  
 This filtering can be turned off in the command line by typing "pathCheckOff" as the second argument.
 Ex. "python3 assignment.py log.json pathCheckOff" If no second argument is offered or the second argument is not "pathCheckOff", the filename in the "ph" is checked against the "nm" field.
