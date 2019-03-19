@@ -151,7 +151,6 @@ for line in fileHandle:
 		#add fileName as a new entry in the nested extName dictionary
 		if fileName not in extensions[extName]:				
 			extensions[extName][fileName]=1
-			print("aiya")
 		#else: fileName entry is found in the nested extName dictionary			
 		else:				
 			print("Double found! " + fileName +"."+extName)
@@ -168,7 +167,7 @@ if len(extensions) > 0:
 else:
 	print("No valid lines found in file")
 
-print("total number of unique filenames: "+str(sum))
+print("Total number of unique filenames: "+str(sum))
 		
 
 	
