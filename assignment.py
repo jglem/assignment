@@ -121,7 +121,7 @@ for line in fileHandle:
 			
 		#else, do not try to add anything new to the "No extensions" dictionary
 
-	#If a dot is found in the fileName, this is a filename with an extension
+	#If a dot is found in the fileName, this is a filename with an extension 
 	else:
 		
 		#Separate the extension name from the just the filename
